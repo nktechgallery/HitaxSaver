@@ -1,0 +1,276 @@
+/* ─── Google Fonts ─── */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,500&display=swap');
+
+@import "tailwindcss";
+
+/* ─── Tailwind v4 Theme ─── */
+@theme {
+  --color-purple-50: #F6F3FA;
+  --color-purple-100: #EDE8F5;
+  --color-purple-200: #D9CEF0;
+  --color-purple-300: #B9A5E0;
+  --color-purple-400: #9B7DD3;
+  --color-purple-500: #7C5CDB;
+  --color-purple-600: #5E3FBF;
+  --color-purple-700: #4C32A8;
+  --color-purple-800: #3C2587;
+  --color-purple-900: #2D1B69;
+  --color-purple-950: #1A0F40;
+
+  --color-bg-primary: #FFFFFF;
+  --color-bg-warm: #FAFAF8;
+  --color-surface: #F5F5F3;
+  --color-border: #E8E6EC;
+  --color-border-light: #F0EDF4;
+
+  --color-text-primary: #1A1625;
+  --color-text-secondary: #4A4458;
+  --color-text-muted: #8A8497;
+
+  --color-success: #16A34A;
+  --color-warning: #D97706;
+  --color-error: #DC2626;
+
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+
+  --animate-fade-in: fade-in 0.5s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+  --animate-slide-up: slide-up 0.5s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-stopped {
+  overflow: clip;
+}
+
+/* ─── Base Styles ─── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  width: 100%;
+  max-width: 100%;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  [data-aos] {
+    opacity: 1;
+    transform: none !important;
+    transition: none !important;
+  }
+  .site-shell {
+    transition: none;
+  }
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-sans);
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--color-text-secondary);
+  background-color: var(--color-bg-primary);
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100%;
+}
+
+#root {
+  width: 100%;
+  max-width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+img,
+video,
+canvas {
+  max-width: 100%;
+}
+
+.site-shell {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  min-width: 0;
+  flex-direction: column;
+  transition: width 1050ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (min-width: 768px) {
+  body.chatbot-open .site-shell {
+    width: 66.667%;
+  }
+
+  body.chatbot-open .site-shell > header {
+    right: 33.333%;
+  }
+}
+
+/* ─── Typography ─── */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--color-text-primary);
+  font-weight: 600;
+  line-height: 1.2;
+  margin: 0;
+}
+
+h1 {
+  font-size: 3.5rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.08;
+}
+
+h2 {
+  font-size: 2.5rem;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+}
+
+h3 {
+  font-size: 1.5rem;
+  letter-spacing: -0.015em;
+}
+
+h4 {
+  font-size: 1.125rem;
+  letter-spacing: -0.01em;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: var(--color-purple-700);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+a:hover {
+  color: var(--color-purple-600);
+}
+
+/* ─── Focus Styles ─── */
+:focus-visible {
+  outline: 2px solid var(--color-purple-500);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ─── Selection ─── */
+::selection {
+  background-color: var(--color-purple-100);
+  color: var(--color-purple-900);
+}
+
+/* ─── Form Base ─── */
+input,
+select,
+textarea {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+}
+
+/* ─── Responsive Typography ─── */
+@media (max-width: 768px) {
+  body {
+    font-size: 16px;
+  }
+
+  h1 {
+    font-size: 2.25rem;
+    letter-spacing: -0.02em;
+  }
+
+  h2 {
+    font-size: 1.75rem;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 2rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+}
+
+/* ─── Utility: Eyebrow Label ─── */
+.eyebrow {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-purple-700);
+}
+
+/* ─── Utility: Number Display ─── */
+.number-display {
+  font-size: 3rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: var(--color-purple-700);
+  line-height: 1;
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-warm);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}

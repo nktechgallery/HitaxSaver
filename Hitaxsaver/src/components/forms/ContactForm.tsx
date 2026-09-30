@@ -5,6 +5,7 @@ import { Textarea } from './Textarea';
 import { Button } from '../ui/Button';
 import { CircleCheck, AlertCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { BUSINESS_EMAIL } from '../../constants/seo';
 
 const CUSTOMER_TYPES = [
   { value: 'individual', label: 'Individual' },
@@ -81,22 +82,23 @@ export function ContactForm() {
     setStatus('loading');
 
     try {
-      // FormSubmit.co integration
-      // Replace YOUR_EMAIL_ADDRESS with the actual business email
-      const response = await fetch('https://formsubmit.co/ajax/YOUR_EMAIL_ADDRESS', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
+      const response = await fetch(
+        `https://formsubmit.co/ajax/${encodeURIComponent(BUSINESS_EMAIL)}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+          body: JSON.stringify(Object.fromEntries(formData)),
         },
-        body: JSON.stringify(Object.fromEntries(formData)),
-      });
+      );
 
-      if (response.ok) {
-        setStatus('success');
-      } else {
-        setStatus('error');
+      if (!response.ok) {
+        throw new Error(`Form submission failed with status ${response.status}`);
       }
+
+      setStatus('success');
     } catch {
       setStatus('error');
     }

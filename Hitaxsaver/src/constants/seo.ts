@@ -1,7 +1,7 @@
 import { SERVICES } from './services';
 
 export const SITE_URL = 'https://www.hitaxsaver.com';
-export const BUSINESS_EMAIL = '[BUSINESS_EMAIL]';
+export const BUSINESS_EMAIL = 'info@hitaxsaver.com';
 export const PHONE_NUMBER = '[PHONE_NUMBER]';
 export const BUSINESS_ADDRESS = '[BUSINESS_ADDRESS]';
 

@@ -2,7 +2,8 @@ import { SERVICES } from './services';
 
 export const SITE_URL = 'https://www.hitaxsaver.com';
 export const BUSINESS_EMAIL = 'info@hitaxsaver.com';
-export const PHONE_NUMBER = '[PHONE_NUMBER]';
+export const PHONE_NUMBER = '+91 7200555987';
+export const PHONE_LINK = 'tel:+917200555987';
 export const BUSINESS_ADDRESS = '[BUSINESS_ADDRESS]';
 
 export interface PageMeta {

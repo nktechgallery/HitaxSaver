@@ -2,6 +2,7 @@ import { Container } from './Container';
 import { NAV_LINKS } from '../../constants/navigation';
 import { SERVICES } from '../../constants/services';
 import { BRAND_ICON } from '../../constants/images';
+import { PHONE_LINK, PHONE_NUMBER } from '../../constants/seo';
 
 const currentYear = new Date().getFullYear();
 
@@ -88,6 +89,15 @@ export function Footer() {
               <p>+91 XXXXX XXXXX</p>
             </div>
             */}
+            <div className="mt-6 text-sm text-white/50">
+              <a
+                href={PHONE_LINK}
+                aria-label={`Call HiTaxSaver at ${PHONE_NUMBER}`}
+                className="hover:text-purple-400 no-underline transition-colors duration-150"
+              >
+                Mobile No: {PHONE_NUMBER}
+              </a>
+            </div>
           </div>
         </div>
 

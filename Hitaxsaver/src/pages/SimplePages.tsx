@@ -3,6 +3,7 @@ import { ContactSection } from '../components/sections/ContactSection';
 import { Seo } from '../components/Seo';
 import { SERVICES } from '../constants/services';
 import { ABOUT_IMAGE } from '../constants/images';
+import { BUSINESS_EMAIL, PHONE_NUMBER } from '../constants/seo';
 import { Button } from '../components/ui/Button';
 import { CheckCircle2, FileCheck2, LockKeyhole, Scale, ShieldCheck, Users } from 'lucide-react';
 
@@ -176,7 +177,7 @@ export function ContactPage() {
 }
 
 export function PrivacyPage() {
-  return <PolicyPage path="/privacy-policy" title="Privacy Policy" body="HiTaxSaver should collect only the information needed to respond to an enquiry. Do not submit PAN, Aadhaar, OTPs, passwords or confidential financial documents through the public consultation form. Replace [BUSINESS_EMAIL], [PHONE_NUMBER] and [BUSINESS_ADDRESS] with verified details before launch." />;
+  return <PolicyPage path="/privacy-policy" title="Privacy Policy" body={`HiTaxSaver should collect only the information needed to respond to an enquiry. Do not submit PAN, Aadhaar, OTPs, passwords or confidential financial documents through the public consultation form. For contact, use ${BUSINESS_EMAIL} or ${PHONE_NUMBER}.`} />;
 }
 
 export function TermsPage() {

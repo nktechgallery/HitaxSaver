@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react';
+import { useRef, useState, type FormEvent } from 'react';
 import { Input } from './Input';
 import { Select } from './Select';
 import { Textarea } from './Textarea';
@@ -7,26 +7,13 @@ import { CircleCheck, AlertCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BUSINESS_EMAIL } from '../../constants/seo';
 
-const CUSTOMER_TYPES = [
-  { value: 'individual', label: 'Individual' },
-  { value: 'salaried', label: 'Salaried Professional' },
-  { value: 'freelancer', label: 'Freelancer' },
-  { value: 'startup', label: 'Startup' },
-  { value: 'small-business', label: 'Small Business' },
-  { value: 'msme', label: 'MSME' },
-  { value: 'partnership', label: 'Partnership Firm' },
-  { value: 'company', label: 'Company' },
-  { value: 'other', label: 'Other' },
-];
-
 const SERVICES = [
-  { value: 'accounting', label: 'Accounting Services' },
-  { value: 'auditing', label: 'Auditing Services' },
-  { value: 'gst', label: 'GST Compliance' },
-  { value: 'income-tax', label: 'Income Tax Compliance' },
-  { value: 'tds', label: 'TDS Compliance' },
-  { value: 'multiple', label: 'Multiple Services' },
-  { value: 'other', label: 'Other' },
+  { value: 'Accounting', label: 'Accounting' },
+  { value: 'Auditing', label: 'Auditing' },
+  { value: 'GST Compliance', label: 'GST Compliance' },
+  { value: 'Income Tax Compliance', label: 'Income Tax Compliance' },
+  { value: 'TDS Compliance', label: 'TDS Compliance' },
+  { value: 'General Enquiry', label: 'General Enquiry' },
 ];
 
 interface FormErrors {
@@ -37,95 +24,143 @@ interface FormErrors {
   message?: string;
 }
 
-type FormStatus = 'idle' | 'loading' | 'success' | 'error';
+type FormStatus = 'idle' | 'submitting' | 'success' | 'error';
+
+interface ContactPayload {
+  name: string;
+  email: string;
+  phone: string;
+  service: string;
+  message: string;
+  _subject: string;
+  _template: string;
+  _honey: string;
+}
+
+interface FormSubmitResponse {
+  success?: string | boolean;
+  message?: string;
+}
+
+const FORM_ENDPOINT = `https://formsubmit.co/ajax/${BUSINESS_EMAIL}`;
+const SUCCESS_MESSAGE =
+  "Thanks for reaching out. We'll review your requirements and get back to you.";
+const ERROR_MESSAGE =
+  'Something went wrong while sending your enquiry. Please try again or contact us directly.';
+
+function getString(form: FormData, key: string) {
+  return String(form.get(key) ?? '').trim();
+}
+
+function isAcceptedFormSubmitResponse(data: FormSubmitResponse) {
+  return data.success === true || data.success === 'true';
+}
 
 export function ContactForm() {
+  const formRef = useRef<HTMLFormElement>(null);
+  const submittingRef = useRef(false);
   const [status, setStatus] = useState<FormStatus>('idle');
   const [errors, setErrors] = useState<FormErrors>({});
+  const [feedback, setFeedback] = useState('');
 
-  function validate(form: FormData): FormErrors {
+  function validate(form: FormData): { errors: FormErrors; payload: ContactPayload } {
     const e: FormErrors = {};
-    const name = form.get('name') as string;
-    const email = form.get('email') as string;
-    const phone = form.get('phone') as string;
-    const service = form.get('service') as string;
-    const message = form.get('message') as string;
+    const name = getString(form, 'name');
+    const email = getString(form, 'email');
+    const phone = getString(form, 'phone');
+    const service = getString(form, 'service');
+    const message = getString(form, 'message');
+    const honey = getString(form, '_honey');
 
-    if (!name?.trim()) e.name = 'Full name is required';
-    if (!email?.trim()) {
-      e.email = 'Email address is required';
+    if (!name) e.name = 'Please enter your full name.';
+    if (!email) {
+      e.email = 'Email address is required.';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      e.email = 'Please enter a valid email address';
+      e.email = 'Please enter a valid email address.';
     }
-    if (!phone?.trim()) {
-      e.phone = 'Phone number is required';
-    } else if (!/^[+]?[\d\s()-]{8,15}$/.test(phone.trim())) {
-      e.phone = 'Please enter a valid phone number';
+    if (!phone) {
+      e.phone = 'Mobile number is required.';
+    } else if (!/^(?:\+91)?[6-9]\d{9}$/.test(phone.replace(/\s+/g, ''))) {
+      e.phone = 'Enter a valid Indian mobile number, e.g. 9876543210 or +919876543210.';
     }
-    if (!service) e.service = 'Please select a service';
-    if (!message?.trim()) e.message = 'Please describe your requirements';
+    if (!service) e.service = 'Please select a service.';
+    if (!message) e.message = 'Please describe your requirements.';
 
-    return e;
+    return {
+      errors: e,
+      payload: {
+        name,
+        email,
+        phone,
+        service,
+        message,
+        _subject: 'New enquiry from HitaxSaver website',
+        _template: 'table',
+        _honey: honey,
+      },
+    };
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (submittingRef.current) return;
+
     const formData = new FormData(event.currentTarget);
-    const validationErrors = validate(formData);
+    const { errors: validationErrors, payload } = validate(formData);
 
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
+      setStatus('idle');
+      setFeedback('Please fix the highlighted fields and try again.');
       return;
     }
 
     setErrors({});
-    setStatus('loading');
+    submittingRef.current = true;
+    setFeedback('');
+    setStatus('submitting');
 
     try {
-      const response = await fetch(
-        `https://formsubmit.co/ajax/${encodeURIComponent(BUSINESS_EMAIL)}`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-          },
-          body: JSON.stringify(Object.fromEntries(formData)),
+      const response = await fetch(FORM_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
         },
-      );
+        body: JSON.stringify(payload),
+      });
 
-      if (!response.ok) {
-        throw new Error(`Form submission failed with status ${response.status}`);
+      const data = (await response.json().catch(() => null)) as FormSubmitResponse | null;
+
+      if (!response.ok || !data || !isAcceptedFormSubmitResponse(data)) {
+        const providerMessage = typeof data?.message === 'string' ? data.message.trim() : '';
+        throw new Error(
+          providerMessage
+            ? `FormSubmit: ${providerMessage}`
+            : response.status === 429
+              ? 'Too many enquiries were sent recently. Please wait a few minutes and try again.'
+              : `The enquiry service could not accept your request (HTTP ${response.status}). Please try again or contact us directly.`,
+        );
       }
 
+      formRef.current?.reset();
       setStatus('success');
-    } catch {
+      setFeedback(SUCCESS_MESSAGE);
+    } catch (error) {
       setStatus('error');
+      setFeedback(
+        error instanceof TypeError
+          ? 'Unable to connect to the enquiry service. Check your internet connection and try again. If it continues, contact us directly.'
+          : error instanceof Error ? error.message : ERROR_MESSAGE,
+      );
+    } finally {
+      submittingRef.current = false;
     }
-  }
-
-  if (status === 'success') {
-    return (
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="flex flex-col items-center justify-center text-center py-16 px-6"
-      >
-        <div className="w-14 h-14 rounded-full bg-success/10 flex items-center justify-center mb-5">
-          <CircleCheck className="w-7 h-7 text-success" />
-        </div>
-        <h3 className="text-xl font-semibold text-text-primary mb-2">
-          Enquiry Received
-        </h3>
-        <p className="text-text-secondary text-[0.9375rem] max-w-sm">
-          Thanks for reaching out. We'll review your requirements and get back to you.
-        </p>
-      </motion.div>
-    );
   }
 
   return (
     <form
+      ref={formRef}
       onSubmit={handleSubmit}
       className="space-y-5"
       noValidate
@@ -137,9 +172,10 @@ export function ContactForm() {
         style={{ display: 'none' }}
         tabIndex={-1}
         autoComplete="off"
+        aria-hidden="true"
       />
-      <input type="hidden" name="_captcha" value="false" />
-      <input type="hidden" name="_subject" value="New Consultation Request - HiTaxSaver" />
+      <input type="hidden" name="_subject" value="New enquiry from HitaxSaver website" />
+      <input type="hidden" name="_template" value="table" />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <Input
@@ -162,27 +198,12 @@ export function ContactForm() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <Input
-          label="Phone Number"
+          label="Mobile Number"
           name="phone"
           type="tel"
           required
           placeholder="+91 98765 43210"
           error={errors.phone}
-        />
-        <Input
-          label="Business / Company Name"
-          name="company"
-          type="text"
-          placeholder="Your business name"
-        />
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-        <Select
-          label="Customer Type"
-          name="customer_type"
-          options={CUSTOMER_TYPES}
-          placeholder="Select your category"
         />
         <Select
           label="Service Required"
@@ -207,15 +228,23 @@ export function ContactForm() {
       </p>
 
       <AnimatePresence>
-        {status === 'error' && (
+        {feedback && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="flex items-center gap-2 text-error text-sm font-medium"
+            role={status === 'error' ? 'alert' : 'status'}
+            aria-live="polite"
+            className={`flex items-center gap-2 text-sm font-medium ${
+              status === 'success' ? 'text-success' : status === 'error' ? 'text-error' : 'text-text-secondary'
+            }`}
           >
-            <AlertCircle className="w-4 h-4 flex-shrink-0" />
-            Something went wrong. Please try again or contact us directly.
+            {status === 'success' ? (
+              <CircleCheck className="w-4 h-4 flex-shrink-0" />
+            ) : (
+              <AlertCircle className="w-4 h-4 flex-shrink-0" />
+            )}
+            {feedback}
           </motion.div>
         )}
       </AnimatePresence>
@@ -223,10 +252,11 @@ export function ContactForm() {
       <Button
         type="submit"
         size="lg"
-        loading={status === 'loading'}
+        loading={status === 'submitting'}
+        disabled={status === 'submitting'}
         className="w-full md:w-auto"
       >
-        Request Consultation
+        {status === 'submitting' ? 'Sending...' : 'Request Consultation'}
       </Button>
     </form>
   );

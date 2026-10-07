@@ -1,9 +1,12 @@
 import { SERVICES } from './services';
 
 export const SITE_URL = 'https://www.hitaxsaver.com';
-export const BUSINESS_EMAIL = 'info@hitaxsaver.com';
+export const BUSINESS_EMAIL = 'hitaxsaver@gmail.com';
 export const PHONE_NUMBER = '+91 7200555987';
 export const PHONE_LINK = 'tel:+917200555987';
+export const EMAIL_LINK = `mailto:${BUSINESS_EMAIL}`;
+export const WHATSAPP_LINK =
+  'https://wa.me/917200555987?text=Hello%20HiTaxSaver%2C%20I%20would%20like%20to%20discuss%20a%20tax%20or%20accounting%20requirement.';
 export const BUSINESS_ADDRESS = '[BUSINESS_ADDRESS]';
 
 export interface PageMeta {

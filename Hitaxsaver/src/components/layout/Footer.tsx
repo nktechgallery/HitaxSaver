@@ -2,7 +2,7 @@ import { Container } from './Container';
 import { NAV_LINKS } from '../../constants/navigation';
 import { SERVICES } from '../../constants/services';
 import { BRAND_ICON } from '../../constants/images';
-import { PHONE_LINK, PHONE_NUMBER } from '../../constants/seo';
+import { BUSINESS_EMAIL, EMAIL_LINK, PHONE_LINK, PHONE_NUMBER } from '../../constants/seo';
 
 const currentYear = new Date().getFullYear();
 
@@ -85,15 +85,22 @@ export function Footer() {
             {/* Placeholder for contact info — replace when available */}
             {/* 
             <div className="mt-6 space-y-2 text-sm text-white/50">
-              <p>info@hitaxsaver.com</p>
-              <p>+91 XXXXX XXXXX</p>
+              <p>{BUSINESS_EMAIL}</p>
+              <p>{PHONE_NUMBER}</p>
             </div>
             */}
-            <div className="mt-6 text-sm text-white/50">
+            <div className="mt-6 space-y-2 text-sm text-white/50">
+              <a
+                href={EMAIL_LINK}
+                aria-label={`Email HiTaxSaver at ${BUSINESS_EMAIL}`}
+                className="block hover:text-purple-400 no-underline transition-colors duration-150"
+              >
+                Mail ID: {BUSINESS_EMAIL}
+              </a>
               <a
                 href={PHONE_LINK}
                 aria-label={`Call HiTaxSaver at ${PHONE_NUMBER}`}
-                className="hover:text-purple-400 no-underline transition-colors duration-150"
+                className="block hover:text-purple-400 no-underline transition-colors duration-150"
               >
                 Mobile No: {PHONE_NUMBER}
               </a>

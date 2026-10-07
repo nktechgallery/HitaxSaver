@@ -28,6 +28,8 @@ export function Textarea({
       <textarea
         id={textareaId}
         required={required}
+        aria-invalid={error ? 'true' : 'false'}
+        aria-describedby={error ? `${textareaId}-error` : undefined}
         rows={4}
         className={cn(
           'w-full px-4 py-2.5 rounded-md border text-text-primary text-[0.9375rem]',
@@ -41,7 +43,9 @@ export function Textarea({
         {...props}
       />
       {error && (
-        <span className="text-xs text-error font-medium">{error}</span>
+        <span id={`${textareaId}-error`} className="text-xs text-error font-medium">
+          {error}
+        </span>
       )}
     </div>
   );

@@ -21,6 +21,8 @@ export function Input({ label, error, id, required, className, ...props }: Input
       <input
         id={inputId}
         required={required}
+        aria-invalid={error ? 'true' : 'false'}
+        aria-describedby={error ? `${inputId}-error` : undefined}
         className={cn(
           'w-full px-4 py-2.5 rounded-md border text-text-primary text-[0.9375rem]',
           'bg-white placeholder:text-text-muted',
@@ -33,7 +35,9 @@ export function Input({ label, error, id, required, className, ...props }: Input
         {...props}
       />
       {error && (
-        <span className="text-xs text-error font-medium">{error}</span>
+        <span id={`${inputId}-error`} className="text-xs text-error font-medium">
+          {error}
+        </span>
       )}
     </div>
   );

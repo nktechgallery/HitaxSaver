@@ -3,8 +3,9 @@ import { SectionWrapper } from '../layout/SectionWrapper';
 import { Eyebrow } from '../ui/Eyebrow';
 import { AnimatedReveal } from '../ui/AnimatedReveal';
 import { ContactForm } from '../forms/ContactForm';
-import { Calculator, FileText, Receipt, Landmark, ClipboardCheck } from 'lucide-react';
+import { Calculator, FileText, Receipt, Landmark, ClipboardCheck, Mail, Phone } from 'lucide-react';
 import { CONTACT_IMAGE } from '../../constants/images';
+import { BUSINESS_EMAIL, EMAIL_LINK, PHONE_LINK, PHONE_NUMBER } from '../../constants/seo';
 
 const serviceCategories = [
   { icon: Calculator, label: 'Accounting' },
@@ -64,6 +65,31 @@ export function ContactSection() {
             </AnimatedReveal>
 
             <AnimatedReveal delay={0.25}>
+              <div className="mt-8 space-y-3">
+                <a
+                  href={PHONE_LINK}
+                  aria-label={`Call HiTaxSaver at ${PHONE_NUMBER}`}
+                  className="flex items-center gap-3 rounded-md text-sm font-medium text-text-secondary transition-colors hover:text-purple-700 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-purple-500"
+                >
+                  <span className="flex h-9 w-9 items-center justify-center rounded-md bg-white border border-border">
+                    <Phone className="w-4 h-4 text-purple-500" />
+                  </span>
+                  {PHONE_NUMBER}
+                </a>
+                <a
+                  href={EMAIL_LINK}
+                  aria-label={`Email HiTaxSaver at ${BUSINESS_EMAIL}`}
+                  className="flex items-center gap-3 rounded-md text-sm font-medium text-text-secondary transition-colors hover:text-purple-700 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-purple-500"
+                >
+                  <span className="flex h-9 w-9 items-center justify-center rounded-md bg-white border border-border">
+                    <Mail className="w-4 h-4 text-purple-500" />
+                  </span>
+                  {BUSINESS_EMAIL}
+                </a>
+              </div>
+            </AnimatedReveal>
+
+            <AnimatedReveal delay={0.3}>
               <figure className="mt-8 aspect-[16/9] overflow-hidden rounded-lg">
                 <img
                   src={CONTACT_IMAGE}
@@ -82,11 +108,11 @@ export function ContactSection() {
               <div className="mt-8 space-y-3">
                 <div className="flex items-center gap-3 text-sm text-text-secondary">
                   <Mail className="w-4 h-4 text-purple-500" />
-                  info@hitaxsaver.com
+                  {BUSINESS_EMAIL}
                 </div>
                 <div className="flex items-center gap-3 text-sm text-text-secondary">
                   <Phone className="w-4 h-4 text-purple-500" />
-                  +91 XXXXX XXXXX
+                  {PHONE_NUMBER}
                 </div>
               </div>
             </AnimatedReveal>

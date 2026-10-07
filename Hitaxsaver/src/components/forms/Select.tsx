@@ -32,6 +32,8 @@ export function Select({
       <select
         id={selectId}
         required={required}
+        aria-invalid={error ? 'true' : 'false'}
+        aria-describedby={error ? `${selectId}-error` : undefined}
         className={cn(
           'w-full px-4 py-2.5 rounded-md border text-text-primary text-[0.9375rem]',
           'bg-white appearance-none',
@@ -55,7 +57,9 @@ export function Select({
         ))}
       </select>
       {error && (
-        <span className="text-xs text-error font-medium">{error}</span>
+        <span id={`${selectId}-error`} className="text-xs text-error font-medium">
+          {error}
+        </span>
       )}
     </div>
   );

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { Calculator, ClipboardCheck, FileText, MessageCircle, Receipt, Sparkles, X } from 'lucide-react';
 import { BRAND_ICON } from '../constants/images';
+import { WHATSAPP_LINK } from '../constants/seo';
 
 const prompts = [
   'Need help getting your tax compliance back on track?',
@@ -11,9 +12,6 @@ const prompts = [
   'Need support with TDS filing and reconciliation?',
   'Looking for reliable monthly accounting support?',
 ];
-
-const whatsappUrl =
-  'https://wa.me/919025003542?text=Hello%20HiTaxSaver%2C%20I%20would%20like%20to%20discuss%20a%20tax%20or%20accounting%20requirement.';
 
 const serviceAreas = [
   { icon: Calculator, title: 'Accounting support', copy: 'Bookkeeping, reconciliations and organized financial records.' },
@@ -183,7 +181,7 @@ export function ConsultationBot() {
 
             <div className="flex-none border-t border-border bg-white p-4 sm:px-7 sm:py-5">
               <a
-                href={whatsappUrl}
+                href={WHATSAPP_LINK}
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-md bg-[#168A45] px-5 py-3 text-sm font-bold !text-white shadow-sm transition-all hover:-translate-y-px hover:bg-[#11763A] hover:shadow-md"
